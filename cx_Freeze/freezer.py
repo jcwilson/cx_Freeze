@@ -63,11 +63,11 @@ MSVCR_MANIFEST_TEMPLATE = """
 
 def process_path_specs(specs):
     """Prepare paths specified as config.
-    
+
     The input is a list of either strings, or 2-tuples (source, target).
     Where single strings are supplied, the basenames are used as targets.
     Where targets are given explicitly, they must not be absolute paths.
-    
+
     Returns a list of 2-tuples, or throws ConfigError if something is wrong
     in the input.
     """
@@ -416,7 +416,7 @@ class Freezer(object):
             sys.stdout.write(" %-25s %s\n" % (module.name, module.file or ""))
         sys.stdout.write("\n")
 
-    
+
 
     def _RemoveFile(self, path):
         if os.path.exists(path):
@@ -441,7 +441,7 @@ class Freezer(object):
            binIncludes and binExcludes configuration variables using first the
            full file name, then just the base file name, then the file name
            without any version numbers.
-           
+
            Files are included unless specifically excluded but inclusions take
            precedence over exclusions."""
 
@@ -599,8 +599,9 @@ class Freezer(object):
         for module, target in filesToCopy:
             try:
                 if module.parent is not None:
-                    path = os.pathsep.join([origPath] + module.parent.path)
-                    os.environ["PATH"] = path
+                    if module.parent.path is not None:
+                        path = os.pathsep.join([origPath] + module.parent.path)
+                        os.environ["PATH"] = path
                 self._CopyFile(module.file, target, copyDependentFiles)
             finally:
                 os.environ["PATH"] = origPath
